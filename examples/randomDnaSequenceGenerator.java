@@ -109,6 +109,5 @@ public class randomDnaSequenceGenerator
         System.out.println("The frequency of G is: " + (float)numberOfG/3000);
         System.out.println("The frequency of C is: " + (float)numberOfC/3000);
         System.out.println("The new frequency of AAA is: " + (float)numberOfAAANew/1000);
-
     }
 }
