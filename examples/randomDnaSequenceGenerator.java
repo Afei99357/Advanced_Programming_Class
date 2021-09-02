@@ -29,9 +29,12 @@ public class randomDnaSequenceGenerator
         System.out.println(sequenceList);
         System.out.println("The frequency of AAA is: " + (float)numberOfAAA/1000);
 
+/****
+ * ********
+ * For p(A) = 0.12; p(C) = 0.38; p(G) = 0.39; p(T) = 0.11
+ * the number of A=360, T=330, G=1170 , C=1140
+ *********/
 
-//        For p(A) = 0.12; p(C) = 0.38; p(G) = 0.39; p(T) = 0.11
-//        the number of A=360, T=330, G=1170 , C=1140
         int numberOfA = 0;
         int numberOfT = 0;
         int numberOfG = 0;
