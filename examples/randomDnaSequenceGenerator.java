@@ -6,6 +6,8 @@ import java.util.Random;
 
 public class randomDnaSequenceGenerator
 {
+    private static String alphabet = "ATGC";
+    /** produced random dna sequence */
 //    static void print1000DnaSequence() {
 //        String alphabet = "ATGC";
 //        int N = alphabet.length();
@@ -36,7 +38,7 @@ public class randomDnaSequenceGenerator
          * the number of A=750, T=750, G=750 , C=750
          *********/
 
-        String alphabet = "ATGC";
+//        String alphabet = "ATGC";
         Random r = new Random();
 
         int numberOfA = 0;
@@ -111,11 +113,18 @@ public class randomDnaSequenceGenerator
                 numberOfAAANew++;
             }
         }
-        System.out.println("The 25% frequency of A is: " + (float)numberOfA/3000);
-        System.out.println("The 25% frequency of T is: " + (float)numberOfT/3000);
-        System.out.println("The 25% frequency of G is: " + (float)numberOfG/3000);
-        System.out.println("The 25% frequency of C is: " + (float)numberOfC/3000);
-        System.out.println("The new 25% frequency of AAA is: " + (float)numberOfAAANew/1000);
+        System.out.println("******Answers for question 1: ******\n");
+        System.out.println("number of A is: " + numberOfA + "\n" + "number of C is: " + numberOfC + "\n"
+                + "number of G is: " + + numberOfG + "\n" + "number of T is: " + + numberOfT);
+        System.out.println("The frequency of A is: " + (float)numberOfA/3000);
+        System.out.println("The frequency of T is: " + (float)numberOfT/3000);
+        System.out.println("The frequency of G is: " + (float)numberOfG/3000);
+        System.out.println("The frequency of C is: " + (float)numberOfC/3000 + "\n");
+
+        System.out.println("******Answers for question 2: ******\n");
+        System.out.println("The expected frequency of AAA is: " + 0.25*0.25*0.25 );
+        System.out.println("The actual java frequency of AAA is: " + (float)numberOfAAANew/1000 + "\n");
+        System.out.println("The java's number is pretty close to my expectation. \n");
     }
 
     static void print1000DnaSequenceModified()
@@ -126,7 +135,7 @@ public class randomDnaSequenceGenerator
          * the number of A=360, T=330, G=1170 , C=1140
          *********/
 
-        String alphabet = "ATGC";
+//        String alphabet = "ATGC";
         Random r = new Random();
 
         int numberOfA = 0;
@@ -201,11 +210,17 @@ public class randomDnaSequenceGenerator
                 numberOfAAANew++;
             }
         }
-        System.out.println("The frequency of A is: " + (float)numberOfA/3000);
-        System.out.println("The frequency of T is: " + (float)numberOfT/3000);
-        System.out.println("The frequency of G is: " + (float)numberOfG/3000);
-        System.out.println("The frequency of C is: " + (float)numberOfC/3000);
-        System.out.println("The new frequency of AAA is: " + (float)numberOfAAANew/1000);
+
+        System.out.println("******Answers for question 3: ******\n");
+        System.out.println("number of A is: " + numberOfA + "\n" + "number of C is: " + numberOfC + "\n"
+                + "number of G is: " + + numberOfG + "\n" + "number of T is: " + + numberOfT);
+        System.out.println("The modified frequency of A is: " + (float)numberOfA/3000);
+        System.out.println("The modified frequency of T is: " + (float)numberOfT/3000);
+        System.out.println("The modified frequency of G is: " + (float)numberOfG/3000);
+        System.out.println("The modified frequency of C is: " + (float)numberOfC/3000);
+        System.out.println("The expected modified frequency of AAA is: " + 0.12*0.12*0.12);
+        System.out.println("The actual java modified frequency of AAA is: " + (float)numberOfAAANew/1000);
+        System.out.println("The java produced 'AAA' does not at close to the expected frequency!");
     }
 
     public static void main(String[] args)
@@ -213,6 +228,11 @@ public class randomDnaSequenceGenerator
 //        print1000DnaSequence();
         print1000DnaSequence25Percentage();
         print1000DnaSequenceModified();
+
+//        for(int i=0; i<10000; i++){
+//            print1000DnaSequenceModified();
+//            System.out.println("\n");
+//        }
 
     }
 }
