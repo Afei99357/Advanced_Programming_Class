@@ -113,7 +113,7 @@ public class randomDnaSequenceGenerator
                 numberOfAAANew++;
             }
         }
-        System.out.println("******Answers for question 1: ******\n");
+        System.out.println("\n******Answers for question 1: ******\n");
         System.out.println("number of A is: " + numberOfA + "\n" + "number of C is: " + numberOfC + "\n"
                 + "number of G is: " + + numberOfG + "\n" + "number of T is: " + + numberOfT);
         System.out.println("The frequency of A is: " + (float)numberOfA/3000);
