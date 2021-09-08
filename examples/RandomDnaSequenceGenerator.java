@@ -53,18 +53,18 @@ public class RandomDnaSequenceGenerator
             StringBuilder dnaSequenceNew = new StringBuilder(3);
             for (int n = 0; n < 3; n++) {
                 int M = alphabet.length();
-                char codon = alphabet.charAt(r.nextInt(M));
-                dnaSequenceNew.append(codon);
-                if(String.valueOf(codon).equals("A")){
+                char threeMers = alphabet.charAt(r.nextInt(M));
+                dnaSequenceNew.append(threeMers);
+                if(String.valueOf(threeMers).equals("A")){
                     numberOfA++;
                 }
-                else if(String.valueOf(codon).equals("T")){
+                else if(String.valueOf(threeMers).equals("T")){
                     numberOfT++;
                 }
-                else if(String.valueOf(codon).equals("G")){
+                else if(String.valueOf(threeMers).equals("G")){
                     numberOfG++;
                 }
-                else if(String.valueOf(codon).equals("C")){
+                else if(String.valueOf(threeMers).equals("C")){
                     numberOfC++;
                 }
                 if(numberOfA >750){
@@ -107,23 +107,24 @@ public class RandomDnaSequenceGenerator
             sequenceListNew.add(dnaSequenceNew.toString());
         }
 
-        int numberOfAAANew = 0;
+        int numberOfAaaRandom = 0;
         for (String i: sequenceListNew){
             if (i.equals("AAA")){
-                numberOfAAANew++;
+                numberOfAaaRandom++;
             }
         }
         System.out.println("\n******Answers for question 1: ******\n");
-        System.out.println("number of A is: " + numberOfA + "\n" + "number of C is: " + numberOfC + "\n"
-                + "number of G is: " + + numberOfG + "\n" + "number of T is: " + + numberOfT);
+        System.out.println("number of A is: " + numberOfA + "\n" + "number of T is: " + numberOfT + "\n"
+                + "number of G is: " + numberOfG + "\n" + "number of C is: " + numberOfC);
         System.out.println("The frequency of A is: " + (float)numberOfA/3000);
         System.out.println("The frequency of T is: " + (float)numberOfT/3000);
         System.out.println("The frequency of G is: " + (float)numberOfG/3000);
-        System.out.println("The frequency of C is: " + (float)numberOfC/3000 + "\n");
+        System.out.println("The frequency of C is: " + (float)numberOfC/3000);
+        System.out.println("The 1000 random DNA 3-mers are: " + sequenceListNew + "\n");
 
         System.out.println("******Answers for question 2: ******\n");
         System.out.println("The expected frequency of AAA is: " + 0.25*0.25*0.25 );
-        System.out.println("The actual java frequency of AAA is: " + (float)numberOfAAANew/1000 + "\n");
+        System.out.println("The actual java frequency of AAA is: " + (float)numberOfAaaRandom/1000 + "\n");
         System.out.println("The java's number is pretty close to my expectation. \n");
     }
 
@@ -150,18 +151,18 @@ public class RandomDnaSequenceGenerator
             StringBuilder dnaSequenceNew = new StringBuilder(3);
             for (int n = 0; n < 3; n++) {
                 int M = alphabet.length();
-                char codon = alphabet.charAt(r.nextInt(M));
-                dnaSequenceNew.append(codon);
-                if(String.valueOf(codon).equals("A")){
+                char threeMers = alphabet.charAt(r.nextInt(M));
+                dnaSequenceNew.append(threeMers);
+                if(String.valueOf(threeMers).equals("A")){
                     numberOfA++;
                 }
-                else if(String.valueOf(codon).equals("T")){
+                else if(String.valueOf(threeMers).equals("T")){
                     numberOfT++;
                 }
-                else if(String.valueOf(codon).equals("G")){
+                else if(String.valueOf(threeMers).equals("G")){
                     numberOfG++;
                 }
-                else if(String.valueOf(codon).equals("C")){
+                else if(String.valueOf(threeMers).equals("C")){
                     numberOfC++;
                 }
                 if(numberOfA >360){
@@ -204,22 +205,23 @@ public class RandomDnaSequenceGenerator
             sequenceListNew.add(dnaSequenceNew.toString());
         }
 
-        int numberOfAAANew = 0;
+        int numberOfAaaModified = 0;
         for (String i: sequenceListNew){
             if (i.equals("AAA")){
-                numberOfAAANew++;
+                numberOfAaaModified++;
             }
         }
 
         System.out.println("******Answers for question 3: ******\n");
-        System.out.println("number of A is: " + numberOfA + "\n" + "number of C is: " + numberOfC + "\n"
-                + "number of G is: " + + numberOfG + "\n" + "number of T is: " + + numberOfT);
+        System.out.println("number of A is: " + numberOfA + "\n" + "number of T is: " + numberOfT + "\n" +
+                "number of G is: " + numberOfG + "\n" + "number of C is: " + numberOfC);
         System.out.println("The modified frequency of A is: " + (float)numberOfA/3000);
         System.out.println("The modified frequency of T is: " + (float)numberOfT/3000);
         System.out.println("The modified frequency of G is: " + (float)numberOfG/3000);
         System.out.println("The modified frequency of C is: " + (float)numberOfC/3000);
+        System.out.println("The 1000 random DNA 3-mers are: " + sequenceListNew + "\n");
         System.out.println("The expected modified frequency of AAA is: " + 0.12*0.12*0.12);
-        System.out.println("The actual java modified frequency of AAA is: " + (float)numberOfAAANew/1000);
+        System.out.println("The actual java modified frequency of AAA is: " + (float)numberOfAaaModified/1000);
         System.out.println("The java produced 'AAA' does not at close to the expected frequency!");
     }
 
@@ -229,6 +231,7 @@ public class RandomDnaSequenceGenerator
         print1000DnaSequence25Percentage();
         print1000DnaSequenceModified();
 
+//        // run the modified sequence generator 10000 times
 //        for(int i=0; i<10000; i++){
 //            print1000DnaSequenceModified();
 //            System.out.println("\n");
