@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class randomDnaSequenceGenerator
+public class RandomDnaSequenceGenerator
 {
     private static String alphabet = "ATGC";
     /** produced random dna sequence */
