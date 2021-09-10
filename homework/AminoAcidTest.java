@@ -25,6 +25,12 @@ public class AminoAcidTest
                 String aString = System.console().readLine().toUpperCase();
                 if (aString.length() != 0){
                     String aChar = "" + aString.charAt(0);
+                    if (aString.equals("QUIT")){
+                        long currentTimeFinish = System.currentTimeMillis();
+                        System.out.println("\nThe quiz has been stopped manually and your score for this test is: "
+                                + score + "， Time cost: " + (currentTimeFinish - startTime)/ 1000 + " seconds.");
+                        break;
+                    }
                     if (aChar.equals(SHORT_NAMES[i])){
                         score++;
                         continue;
