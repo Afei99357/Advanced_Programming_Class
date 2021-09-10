@@ -1,7 +1,5 @@
-package examples;
+package homework;
 
-
-import java.sql.SQLOutput;
 
 public class AminoAcidTest
 {
