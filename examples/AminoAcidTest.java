@@ -16,7 +16,7 @@ public class AminoAcidTest
         long startTime = System.currentTimeMillis();
 
         for (int m=0; 1==1 ; m++){
-            int i = (int) (Math.random() * 21);
+            int i = (int) (Math.random() * 20);
             long currentTime = System.currentTimeMillis();
             if ((currentTime - startTime) <= 30000){
                 System.out.println(FULL_NAMES[i]);
