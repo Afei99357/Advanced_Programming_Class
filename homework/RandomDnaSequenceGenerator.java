@@ -206,7 +206,5 @@ public class RandomDnaSequenceGenerator
     {
         print1000DnaSequence25Percentage();
         print1000DnaSequenceModified();
-
-
     }
 }
