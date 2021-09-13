@@ -8,28 +8,6 @@ public class RandomDnaSequenceGenerator
 {
     private static String alphabet = "ATGC";
     /** produced random dna sequence */
-//    static void print1000DnaSequence() {
-//        String alphabet = "ATGC";
-//        int N = alphabet.length();
-//        Random r = new Random();
-//        List<String> sequenceList = new ArrayList<>();
-//        for (int i=0; i<1000; i++){
-//            StringBuilder dnaSequence = new StringBuilder(3);
-//            for (int n = 0; n < 3; n++) {
-//                dnaSequence.append(alphabet.charAt(r.nextInt(N)));
-//            }
-//            sequenceList.add(dnaSequence.toString());
-//        }
-//
-//        int numberOfAAA = 0;
-//        for (String i: sequenceList){
-//            if (i.equals("AAA")){
-//                numberOfAAA++;
-//            }
-//        }
-//        System.out.println(sequenceList);
-//        System.out.println("The frequency of AAA is: " + (float)numberOfAAA/1000);
-//    }
 
     static void print1000DnaSequence25Percentage() {
         /****
@@ -38,7 +16,6 @@ public class RandomDnaSequenceGenerator
          * the number of A=750, T=750, G=750 , C=750
          *********/
 
-//        String alphabet = "ATGC";
         Random r = new Random();
 
         int numberOfA = 0;
@@ -227,15 +204,9 @@ public class RandomDnaSequenceGenerator
 
     public static void main(String[] args)
     {
-//        print1000DnaSequence();
         print1000DnaSequence25Percentage();
         print1000DnaSequenceModified();
 
-//        // run the modified sequence generator 10000 times
-//        for(int i=0; i<10000; i++){
-//            print1000DnaSequenceModified();
-//            System.out.println("\n");
-//        }
 
     }
 }
