@@ -28,9 +28,9 @@ public class RandomSequenceGeneratorLab3
                 actualNumberList.add((int) (length * weights[i]));
             }
 
+//            make sure the total number is the same as length
             Integer sum = actualNumberList.stream()
                     .collect(Collectors.summingInt(Integer::intValue));
-
             actualNumberList.add(length-sum);
 
             StringBuilder newAlphabet = new StringBuilder();
