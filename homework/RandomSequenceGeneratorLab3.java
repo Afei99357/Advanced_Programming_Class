@@ -15,32 +15,39 @@ public class RandomSequenceGeneratorLab3
         }
         if (length <= 0){
             throw new Exception("Exception: Length equals to 0!\n");
-        }else if(alphabet.length != weights.length){
+        }
+        else if(alphabet.length != weights.length){
             throw new Exception("Exception: alphabet and weights do not have the same length!\n");
-        }else if(Math.abs(weightsSum-1) > 0.01){
+        }
+        else if(Math.abs(weightsSum-1) > 0.01){
             throw new Exception("Exception: the sum of weights is not within round-off error of 1.\n");
         }
         else {
-
+            // create a list to save the actual number of each nucleotide / protein
             List<Integer> actualNumberList = new ArrayList<>();
 
+            // add the actual number of each nucleotide / protein to the list, without adding the last one
             for(int i =0; i<alphabet.length-1; i++){
                 actualNumberList.add((int) (length * weights[i]));
             }
 
-//            make sure the total number is the same as length
+            //adding the actual number of the last nucleotide / protein to the list
             Integer sum = actualNumberList.stream()
                     .collect(Collectors.summingInt(Integer::intValue));
             actualNumberList.add(length-sum);
 
+            // create a StringBuilder to store the actual number of each nucleotide / protein, asn served as
+            // the random char pool for generate the certain percentage of each nucleotide / protein
             StringBuilder newAlphabet = new StringBuilder();
 
+            // fill the StringBuilder pool
             for(int i =0; i<alphabet.length; i++){
                 for(int m=0; m<actualNumberList.get(i).intValue(); m++){
                     newAlphabet.append(alphabet[i]);
                 }
             }
 
+            // create a StringBuilder to store the actual output DNA / protein sequence
             StringBuilder returnAlphabetbBuilder = new StringBuilder();
             for (int m = 0; m < length; m++) {
                 Random random = new Random();
