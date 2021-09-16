@@ -10,39 +10,36 @@ public class RandomSequenceGeneratorLab3
     public static String generateRandomSequence(char[] alphabet, float[] weights, int length) throws Exception
     {
         Float weightsSum = 0f;
-        for(int i=0; i<weights.length; i++) {
+        for (int i = 0; i < weights.length; i++) {
             weightsSum += weights[i];
         }
-        if (length <= 0){
-            throw new Exception("Exception: Length equals to 0!\n");
-        }
-        else if(alphabet.length != weights.length){
+        if (length <= 0) {
+            throw new Exception("Exception: length equals to 0!\n");
+        } else if (alphabet.length != weights.length) {
             throw new Exception("Exception: alphabet and weights do not have the same length!\n");
-        }
-        else if(Math.abs(weightsSum-1) > 0.01){
+        } else if (Math.abs(weightsSum - 1) > 0.01) {
             throw new Exception("Exception: the sum of weights is not within round-off error of 1.\n");
-        }
-        else {
+        } else {
             // create a list to save the actual number of each nucleotide / protein
             List<Integer> actualNumberList = new ArrayList<>();
 
             // add the actual number of each nucleotide / protein to the list, without adding the last one
-            for(int i =0; i<alphabet.length-1; i++){
+            for (int i = 0; i < alphabet.length - 1; i++) {
                 actualNumberList.add((int) (length * weights[i]));
             }
 
             //adding the actual number of the last nucleotide / protein to the list
             Integer sum = actualNumberList.stream()
                     .collect(Collectors.summingInt(Integer::intValue));
-            actualNumberList.add(length-sum);
+            actualNumberList.add(length - sum);
 
             // create a StringBuilder to store the actual number of each nucleotide / protein, asn served as
             // the random char pool for generate the certain percentage of each nucleotide / protein
             StringBuilder newAlphabet = new StringBuilder();
 
             // fill the StringBuilder pool
-            for(int i =0; i<alphabet.length; i++){
-                for(int m=0; m<actualNumberList.get(i).intValue(); m++){
+            for (int i = 0; i < alphabet.length; i++) {
+                for (int m = 0; m < actualNumberList.get(i).intValue(); m++) {
                     newAlphabet.append(alphabet[i]);
                 }
             }
@@ -62,11 +59,11 @@ public class RandomSequenceGeneratorLab3
 
     public static void main(String[] args) throws Exception
     {
-        float[] dnaWeights = { .3f, .3f, .2f, .2f };
-        char[] dnaChars = { 'A', 'C', 'G', 'T'  };
+        float[] dnaWeights = {.3f, .3f, .2f, .2f};
+        char[] dnaChars = {'A', 'C', 'G', 'T'};
 
         // a random DNA 30 mer
-        System.out.println(generateRandomSequence(dnaChars, dnaWeights,30));
+        System.out.println(generateRandomSequence(dnaChars, dnaWeights, 30));
 
         // background rate of residues from https://www.science.org/doi/abs/10.1126/science.286.5438.295
         float proteinBackground[] =
@@ -78,8 +75,8 @@ public class RandomSequenceGeneratorLab3
 
 
         char[] proteinResidues =
-                new char[] { 'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T',
-                        'V', 'W', 'Y' };
+                new char[]{'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T',
+                        'V', 'W', 'Y'};
 
         // a random protein with 30 residues
         System.out.println(generateRandomSequence(proteinResidues, proteinBackground, 30));
