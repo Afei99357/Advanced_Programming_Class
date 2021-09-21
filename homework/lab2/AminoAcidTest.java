@@ -1,4 +1,4 @@
-package homework;
+package homework.lab2;
 
 
 public class AminoAcidTest
