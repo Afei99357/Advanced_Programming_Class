@@ -31,7 +31,7 @@ public class FastaSequence {
         int numberOfGC = 0;
         for (int i = 0; i < sequence.length(); i++) {
             char temp = sequence.charAt(i);
-            if (temp == 'A' || temp == 'G') {
+            if (temp == 'G' || temp == 'C') {
                 numberOfGC++;
             }
         }
@@ -71,27 +71,25 @@ public class FastaSequence {
     public static void writeTableSummary(List<FastaSequence> list, File outputFile) throws Exception {
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
 
-//        StringBuilder outputStringBuilder = new StringBuilder();
         String firstLine = "sequenceID\tnumA\tnumC\tnumG\tnumT\tsequence\n";
         writer.write(firstLine);
 
-//        outputStringBuilder.append(firstLine);
-        for(int i=0; i<list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             String header = list.get(i).getHeader();
             String sequence = list.get(i).getSequence();
-            int numA=0 , numC=0, numG=0, numT=0;
-            for (int m=0; m<sequence.length(); m++) {
+            int numA = 0, numC = 0, numG = 0, numT = 0;
+            for (int m = 0; m < sequence.length(); m++) {
                 char temp = sequence.charAt(m);
                 if (temp == 'A') {
                     numA++;
                 }
-                if (temp == 'C'){
+                if (temp == 'C') {
                     numC++;
                 }
-                if (temp == 'G'){
+                if (temp == 'G') {
                     numG++;
                 }
-                if (temp == 'T'){
+                if (temp == 'T') {
                     numT++;
                 }
             }
@@ -109,7 +107,6 @@ public class FastaSequence {
             newLineBuilder.append(sequence);
             newLineBuilder.append("\n");
             writer.write(newLineBuilder.toString());
-//            outputStringBuilder.append(newLineBuilder);
         }
         writer.flush();
         writer.close();
@@ -128,6 +125,5 @@ public class FastaSequence {
         File myFile = new File("homework/lab4/sequence_summary.txt");
         writeTableSummary(fastaList, myFile);
     }
-
 
 }
