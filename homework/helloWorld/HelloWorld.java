@@ -1,4 +1,4 @@
-package homework;
+package homework.helloWorld;
 
 public class HelloWorld{
     public static void main(String[] args){
