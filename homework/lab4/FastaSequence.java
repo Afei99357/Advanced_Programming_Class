@@ -11,10 +11,6 @@ public class FastaSequence {
         this.sequence = sequence;
     }
 
-    public void setSequence(String sequence) {
-        this.sequence = sequence;
-    }
-
     // returns the header of this sequence without the “>”
     public String getHeader() {
         return this.sequence.split("\n", 2)[0];
