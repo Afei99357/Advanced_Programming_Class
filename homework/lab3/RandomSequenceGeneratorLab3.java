@@ -45,14 +45,14 @@ public class RandomSequenceGeneratorLab3
             }
 
             // create a StringBuilder to store the actual output DNA / protein sequence
-            StringBuilder returnAlphabetbBuilder = new StringBuilder();
+            StringBuilder returnAlphabetBuilder = new StringBuilder();
             for (int m = 0; m < length; m++) {
                 Random random = new Random();
                 int randomIndex = random.nextInt(newAlphabet.length());
-                returnAlphabetbBuilder.append(newAlphabet.charAt(randomIndex));
+                returnAlphabetBuilder.append(newAlphabet.charAt(randomIndex));
                 newAlphabet = newAlphabet.deleteCharAt(randomIndex);
             }
-            return returnAlphabetbBuilder.toString();
+            return returnAlphabetBuilder.toString();
         }
     }
 
