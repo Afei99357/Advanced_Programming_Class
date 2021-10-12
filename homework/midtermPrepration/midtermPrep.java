@@ -37,17 +37,40 @@ public class midtermPrep
         System.out.println(f1 + ", " +f2);
     }
 
+     //Question 10
     public static void main(String[] args)
     {
-        System.out.println("prepare midterm");
-        System.out.println(numGCs("AAAATTTTTGGGGGCCCCCTCTCTCAGAGAATCG"));
-        System.out.println(bothPositive(1, 3));
-        System.out.println(bothPositive(-1, 3));
-        System.out.println(bothPositive(0, 2));
-        skipEveryOther("ADBECIDOEJFLG");
-
-        midtermPrep midtermPrepClass = new midtermPrep();
-        midtermPrepClass.swap(4, 2);
+        Shape circle = new Circle(5);
+//        System.out.println(1003430/ 1000f);
+//        System.out.println( 1.00 - 9 * .10);
+//        System.out.println(circle.getRadius());
+        Shape2 shape2 = new Circle(5);
+        System.out.println(shape2.getArea());
     }
+
+//    public static void main(String[] args)
+//    {
+//        int aRadius = 5;
+//        Shape shape = new Circle(aRadius);
+//        System.out.println(shape.getShapeName());
+//    }
+
+
+
+//    public static void main(String[] args)
+//    {
+//        System.out.println("prepare midterm");
+//        System.out.println(numGCs("AAAATTTTTGGGGGCCCCCTCTCTCAGAGAATCG"));
+//        System.out.println(bothPositive(1, 3));
+//        System.out.println(bothPositive(-1, 3));
+//        System.out.println(bothPositive(0, 2));
+//        skipEveryOther("ADBECIDOEJFLG");
+//
+//        midtermPrep midtermPrepClass = new midtermPrep();
+//        midtermPrepClass.swap(4, 2);
+//        Shape shape = new Circle(5);
+//    }
+
+
 
 }
