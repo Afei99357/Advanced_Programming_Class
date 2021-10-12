@@ -1,5 +1,9 @@
 package homework.midtermPrepration;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 public class midtermPrep
 {
     public static int numGCs(String sequence){
@@ -37,15 +41,61 @@ public class midtermPrep
         System.out.println(f1 + ", " +f2);
     }
 
+    public static void reverseArray(float[] a){
+        int lengthArray = a.length;
+        float[] b = new float[lengthArray];
+        int n = lengthArray;
+
+        for(int i=0; i<lengthArray; i++){
+            b[n-1] = a[i];
+            n = n-1;
+        }
+        System.out.println(b);
+    }
+
+    public static List<Integer> getEvenNumbers(List<Integer> inList){
+        List<Integer> evenList = new ArrayList<>();
+
+        for (int i=0; i<inList.size(); i++){
+            if (inList.get(i)%2==0){
+                evenList.add(inList.get(i));
+            }
+        }
+        return evenList;
+    }
+
+    public static int aMethod(int anInt){
+        return anInt;
+    }
+
      //Question 10
     public static void main(String[] args)
     {
         Shape circle = new Circle(5);
 //        System.out.println(1003430/ 1000f);
-//        System.out.println( 1.00 - 9 * .10);
+        System.out.println(BigDecimal.valueOf(1.00).subtract(BigDecimal.valueOf(9 * .10)));
+        System.out.println((1 - 9 * .10));
+        List<Integer> a = new ArrayList<>();
+        for (int i =0; i< 12; i++){
+            a.add(i);
+        }
+        System.out.println(getEvenNumbers(a));
+        System.out.println(aMethod(5));
+        
+        String m1 = "Hello";
+        Integer m = 34;
+        String m2 = "Hello";
+        System.out.println(m1 == m2);
+
+        byte abc = (byte) 383;
+
+        System.out.println(abc);
+        
+        
 //        System.out.println(circle.getRadius());
-        Shape2 shape2 = new Circle(5);
-        System.out.println(shape2.getArea());
+//        Shape2 shape2 = new Circle(5);
+//        System.out.println(shape2.getArea());
+
     }
 
 //    public static void main(String[] args)
