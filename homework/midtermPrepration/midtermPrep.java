@@ -3,6 +3,8 @@ package homework.midtermPrepration;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class midtermPrep
 {
@@ -37,8 +39,6 @@ public class midtermPrep
         float temp = f1;
         f1 = f2;
         f2 = temp;
-
-        System.out.println(f1 + ", " +f2);
     }
 
     public static void reverseArray(float[] a){
@@ -68,28 +68,48 @@ public class midtermPrep
         return anInt;
     }
 
+
      //Question 10
     public static void main(String[] args)
     {
-        Shape circle = new Circle(5);
+        Circle circle = new Circle(5);
+//        Shape circle = new Circle(5);
 //        System.out.println(1003430/ 1000f);
-        System.out.println(BigDecimal.valueOf(1.00).subtract(BigDecimal.valueOf(9 * .10)));
-        System.out.println((1 - 9 * .10));
+//        System.out.println(BigDecimal.valueOf(1.00).subtract(BigDecimal.valueOf(9 * .10)));
         List<Integer> a = new ArrayList<>();
         for (int i =0; i< 12; i++){
             a.add(i);
         }
-        System.out.println(getEvenNumbers(a));
-        System.out.println(aMethod(5));
-        
-        String m1 = "Hello";
-        Integer m = 34;
-        String m2 = "Hello";
-        System.out.println(m1 == m2);
+//        System.out.println(getEvenNumbers(a));
+//        System.out.println(aMethod(5));
+        String num = String.format("%.2f", 1.00-9*.10);
+        System.out.println(num);
 
-        byte abc = (byte) 383;
+//        String m1 = "Hello";
+//        Integer m = 34;
+//        String m2 = "Hello";
+//        System.out.println(m1 == m2);
+//
+//        byte abc = (byte) 383;
+//
+//        System.out.println(abc);
 
-        System.out.println(abc);
+        String s = "Here is a string";
+        Map<Character, Integer> map = new TreeMap<Character, Integer>();
+        for(char c : s.toCharArray()){
+            if(map.get(c) != null){
+                int val = map.get(c);
+                val++;
+                map.put(c, val);
+            }else{
+                map.put(c, 1);
+            }
+        }
+        for(Character c : map.keySet()){
+            System.out.println(c + " " + map.get(c));
+        }
+        System.out.println("B".compareTo("A"));
+
         
         
 //        System.out.println(circle.getRadius());
