@@ -60,6 +60,8 @@ public class FastaSequence {
                 numberLine++;
             }
         }
+        FastaSequence fastaSequence = new FastaSequence(sequenceBuilder.toString());
+        fastaSequenceList.add(fastaSequence);
         reader.close();
         return fastaSequenceList;
     }
