@@ -17,15 +17,15 @@ public class AminoAcidTestGUI extends JFrame
             "glutamic acid", "glycine", "histidine", "isoleucine", "leucine", "lysine", "methionine", "phenylalanine",
             "proline", "serine", "threonine", "tryptophan", "tyrosine", "valine"};
 
-    public static Timer timer = new Timer();
-    public static int totalTime;
-    public static JTextArea timerDisplay = new JTextArea();
-    public static JTextArea questionArea = new JTextArea();
-    public static JTextField inputField = new JFormattedTextField();
-    public static JTextArea scoreResult = new JTextArea();
-    public static int questionIndex = 0;
-    public static int correctNumber = 0;
-    public static int wrongNumber = 0;
+    private static Timer timer = new Timer();
+    private static int totalTime;
+    private static JTextArea timerDisplay = new JTextArea();
+    private static JTextArea questionArea = new JTextArea();
+    private static JTextField inputField = new JFormattedTextField();
+    private static JTextArea scoreResult = new JTextArea();
+    private static int questionIndex = 0;
+    private static int correctNumber = 0;
+    private static int wrongNumber = 0;
 
 
     private JPanel getTopPanel()
@@ -128,6 +128,7 @@ public class AminoAcidTestGUI extends JFrame
                             questionArea.setText("Quiz is over! Please restart the quiz.");
                             inputField.setEditable(false);
                             startButton.setEnabled(true);
+                            quitButton.setEnabled(false);
                         }
                     }
                 }, 0, 1000);
