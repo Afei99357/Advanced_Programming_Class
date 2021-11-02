@@ -4,17 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Timer;
-import java.util.concurrent.Semaphore;
 
 public class AminoAcidTestGUI extends JFrame implements Runnable
 {
-    private final Semaphore semaphore;
 
-    public AminoAcidTestGUI(Semaphore semaphore)
+    public AminoAcidTestGUI()
     {
         super("Amino Acid Test");
-        this.semaphore = semaphore;
         setLocationRelativeTo(null);
         setSize(500, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,7 +30,6 @@ public class AminoAcidTestGUI extends JFrame implements Runnable
             "proline", "serine", "threonine", "tryptophan", "tyrosine", "valine"};
 
     private static int quitFlag = 0;
-    private static Timer timer = new Timer();
     private static JTextArea timerDisplay = new JTextArea();
     private static JTextArea questionArea = new JTextArea();
     private static JTextField inputField = new JFormattedTextField();
@@ -207,7 +202,6 @@ public class AminoAcidTestGUI extends JFrame implements Runnable
 
     public static void main(String[] args)
     {
-        Semaphore s = new Semaphore(2);
-        test = new AminoAcidTestGUI(s);
+        test = new AminoAcidTestGUI();
     }
 }
