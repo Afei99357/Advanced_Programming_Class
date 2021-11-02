@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.concurrent.Semaphore;
 
@@ -29,24 +27,24 @@ public class AminoAcidTestGUI extends JFrame implements Runnable
 
     }
 
-    public static String[] SHORT_NAMES = {"A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L", "K", "M", "F", "P",
+    private static String[] SHORT_NAMES = {"A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L", "K", "M", "F", "P",
             "S", "T", "W", "Y", "V"};
-    public static String[] FULL_NAMES = {"alanine", "arginine", "asparagine", "aspartic acid", "cysteine", "glutamine",
+    private static String[] FULL_NAMES = {"alanine", "arginine", "asparagine", "aspartic acid", "cysteine", "glutamine",
             "glutamic acid", "glycine", "histidine", "isoleucine", "leucine", "lysine", "methionine", "phenylalanine",
             "proline", "serine", "threonine", "tryptophan", "tyrosine", "valine"};
 
-    public static int quitFlag = 0;
+    private static int quitFlag = 0;
     private static Timer timer = new Timer();
-    public static JTextArea timerDisplay = new JTextArea();
-    public static JTextArea questionArea = new JTextArea();
-    public static JTextField inputField = new JFormattedTextField();
-    public static JTextArea scoreResult = new JTextArea();
+    private static JTextArea timerDisplay = new JTextArea();
+    private static JTextArea questionArea = new JTextArea();
+    private static JTextField inputField = new JFormattedTextField();
+    private static JTextArea scoreResult = new JTextArea();
     private static int questionIndex = 0;
     private static int correctNumber = 0;
     private static int wrongNumber = 0;
-    public static long startTime;
-    public static int timeLeft = 30;
-    public static JButton startButton = new JButton("Start The Quiz");
+    private static long startTime;
+    private static int timeLeft = 30;
+    private static JButton startButton = new JButton("Start The Quiz");
     private static JButton quitButton = new JButton("Cancel");
     private static AminoAcidTestGUI test;
 
@@ -54,6 +52,34 @@ public class AminoAcidTestGUI extends JFrame implements Runnable
     public void run()
     {
         startTimer();
+    }
+
+    public static void startTimer()
+    {
+        long currentTime;
+        while (timeLeft > 0) {
+            if (quitFlag == 0) {
+                currentTime = System.currentTimeMillis();
+                timeLeft = 30 - (int) ((currentTime - startTime) / 1000f);
+                timerDisplay.setText("\n\n\nTime left: " + timeLeft);
+            }
+            if (quitFlag == 1) {
+                timerDisplay.setText("\n\n\nQuiz is interrupted manually! \nPlease restart the quiz!");
+                break;
+            }
+
+        }
+        if (quitFlag == 0) {
+            timerDisplay.setText("\n\n\nTime is over! Please restart the quiz!");
+            questionArea.setText("");
+            inputField.setText("");
+            inputField.setEnabled(false);
+            inputField.setEditable(false);
+            startButton.setEnabled(true);
+            quitButton.setEnabled(false);
+        }
+        quitFlag = 0;
+        timeLeft = 30;
     }
 
     private JPanel getTopPanel()
@@ -173,41 +199,10 @@ public class AminoAcidTestGUI extends JFrame implements Runnable
 
     public void updateQuestion()
     {
-        Map<Integer, String> indexAnswerMap = new HashMap<>();
         questionIndex = (int) (Math.random() * 20);
         String question = FULL_NAMES[questionIndex];
-        StringBuilder sb = new StringBuilder("Provide answer for the following amino acid: " + question);
-        indexAnswerMap.put(questionIndex, sb.toString());
         questionArea.setText("Please provide the correct answer for this: " + question);
         validate();
-    }
-
-    public static void startTimer()
-    {
-        long currentTime;
-        while (timeLeft > 0) {
-            if (quitFlag == 0) {
-                currentTime = System.currentTimeMillis();
-                timeLeft = 30 - (int) ((currentTime - startTime) / 1000f);
-                timerDisplay.setText("\n\n\nTime left: " + timeLeft);
-            }
-            if (quitFlag == 1) {
-                timerDisplay.setText("\n\n\nQuiz is interrupted manually! \nPlease restart the quiz!");
-                break;
-            }
-
-        }
-        if (quitFlag == 0) {
-            timerDisplay.setText("\n\n\nTime is over! Please restart the quiz!");
-            questionArea.setText("");
-            inputField.setText("");
-            inputField.setEnabled(false);
-            inputField.setEditable(false);
-            startButton.setEnabled(true);
-            quitButton.setEnabled(false);
-        }
-        quitFlag = 0;
-        timeLeft = 30;
     }
 
     public static void main(String[] args)
