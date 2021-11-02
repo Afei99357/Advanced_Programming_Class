@@ -13,6 +13,22 @@ public class AminoAcidTestGUI extends JFrame implements Runnable
 {
     private final Semaphore semaphore;
 
+    public AminoAcidTestGUI(Semaphore semaphore)
+    {
+        super("Amino Acid Test");
+        this.semaphore = semaphore;
+        setLocationRelativeTo(null);
+        setSize(500, 200);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(getTopPanel(), BorderLayout.NORTH);
+        getContentPane().add(getCenterPanel(), BorderLayout.CENTER);
+        getContentPane().add(getBottomPanel(), BorderLayout.SOUTH);
+
+        setVisible(true);
+
+    }
+
     public static String[] SHORT_NAMES = {"A", "R", "N", "D", "C", "Q", "E", "G", "H", "I", "L", "K", "M", "F", "P",
             "S", "T", "W", "Y", "V"};
     public static String[] FULL_NAMES = {"alanine", "arginine", "asparagine", "aspartic acid", "cysteine", "glutamine",
@@ -114,10 +130,10 @@ public class AminoAcidTestGUI extends JFrame implements Runnable
                 updateQuestion();
                 inputField.setText("");
                 inputField.setEditable(true);
+                inputField.setEnabled(true);
                 correctNumber = 0;
                 wrongNumber = 0;
                 scoreResult.setText("Right answer: " + correctNumber + ", Wrong answer: " + wrongNumber);
-//                totalTime=30;
                 startButton.setEnabled(false);
                 quitButton.setEnabled(true);
                 startTime = System.currentTimeMillis();
@@ -132,8 +148,10 @@ public class AminoAcidTestGUI extends JFrame implements Runnable
             public void actionPerformed(ActionEvent arg0)
             {
                 quitFlag = 1;
-                questionArea.setText("Quiz is over! Please restart the quiz.");
+                questionArea.setText("");
+                inputField.setText("");
                 inputField.setEditable(false);
+                inputField.setEnabled(false);
                 startButton.setEnabled(true);
                 quitButton.setEnabled(false);
                 validate();
@@ -143,23 +161,6 @@ public class AminoAcidTestGUI extends JFrame implements Runnable
         panel.add(startButton);
         panel.add(quitButton);
         return panel;
-    }
-
-
-    public AminoAcidTestGUI(Semaphore semaphore)
-    {
-        super("Amino Acid Test");
-        this.semaphore = semaphore;
-        setLocationRelativeTo(null);
-        setSize(500, 200);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(getTopPanel(), BorderLayout.NORTH);
-        getContentPane().add(getCenterPanel(), BorderLayout.CENTER);
-        getContentPane().add(getBottomPanel(), BorderLayout.SOUTH);
-
-        setVisible(true);
-
     }
 
     public void updateResult()
@@ -191,16 +192,19 @@ public class AminoAcidTestGUI extends JFrame implements Runnable
                 timerDisplay.setText("\n\n\nTime left: " + timeLeft);
             }
             if (quitFlag == 1) {
-                timerDisplay.setText("\n\n\nQuiz is stopped!");
+                timerDisplay.setText("\n\n\nQuiz is interrupted manually! \nPlease restart the quiz!");
                 break;
             }
 
         }
         if (quitFlag == 0) {
-            timerDisplay.setText("\n\n\nTime is over!");
-            questionArea.setText("Quiz is over! Please restart the quiz.");
+            timerDisplay.setText("\n\n\nTime is over! Please restart the quiz!");
+            questionArea.setText("");
+            inputField.setText("");
+            inputField.setEnabled(false);
             inputField.setEditable(false);
             startButton.setEnabled(true);
+            quitButton.setEnabled(false);
         }
         quitFlag = 0;
         timeLeft = 30;
