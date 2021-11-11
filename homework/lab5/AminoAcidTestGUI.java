@@ -29,18 +29,18 @@ public class AminoAcidTestGUI extends JFrame implements Runnable
             "glutamic acid", "glycine", "histidine", "isoleucine", "leucine", "lysine", "methionine", "phenylalanine",
             "proline", "serine", "threonine", "tryptophan", "tyrosine", "valine"};
 
-    private static int quitFlag = 0;
+    private volatile static int quitFlag = 0;
     private static JTextArea timerDisplay = new JTextArea();
-    private static JTextArea questionArea = new JTextArea();
-    private static JTextField inputField = new JFormattedTextField();
+    private volatile static JTextArea questionArea = new JTextArea();
+    private volatile static JTextField inputField = new JFormattedTextField();
     private static JTextArea scoreResult = new JTextArea();
     private static int questionIndex = 0;
     private static int correctNumber = 0;
     private static int wrongNumber = 0;
     private static long startTime;
     private static int timeLeft = 30;
-    private static JButton startButton = new JButton("Start The Quiz");
-    private static JButton quitButton = new JButton("Cancel");
+    private volatile static JButton startButton = new JButton("Start The Quiz");
+    private volatile static JButton quitButton = new JButton("Cancel");
     private static AminoAcidTestGUI test;
 
     @Override
@@ -53,6 +53,7 @@ public class AminoAcidTestGUI extends JFrame implements Runnable
     {
         long currentTime;
         while (timeLeft > 0) {
+            Thread.yield();
             if (quitFlag == 0) {
                 currentTime = System.currentTimeMillis();
                 timeLeft = 30 - (int) ((currentTime - startTime) / 1000f);
