@@ -10,7 +10,7 @@ import java.util.concurrent.Semaphore;
 
 public class MultithreadingGuiExercise extends JFrame
 {
-    private volatile static JTextArea output = new JTextArea(10,25);
+    private static final JTextArea output = new JTextArea(10,25);
     public static final List<Long> resultList = new CopyOnWriteArrayList<>();
     private static final int numberOfWorkers = 4;
 
@@ -64,11 +64,9 @@ public class MultithreadingGuiExercise extends JFrame
                     }
                     if(i==(int) Math.sqrt(m)){
                         resultList.add(m);
-//                        output.append(m + "\n");
                     }
                 }
                 m++;
-                continue;
             }
             try {
                 Thread.sleep(1000);
@@ -130,10 +128,8 @@ public class MultithreadingGuiExercise extends JFrame
                         } catch (NumberFormatException numberFormatException) {
                             JOptionPane.showMessageDialog(frame, "Only number is allowed");
                             i++;
-                        } catch (HeadlessException headlessException) {
+                        } catch (HeadlessException | InterruptedException headlessException) {
                             headlessException.printStackTrace();
-                        } catch (InterruptedException interruptedException) {
-                            interruptedException.printStackTrace();
                         }
                     }
                 }
@@ -148,7 +144,8 @@ public class MultithreadingGuiExercise extends JFrame
     private void getPrimeNumber(Long originalNumber) throws InterruptedException
     {
         long interval = originalNumber % numberOfWorkers;
-        Semaphore semaphore = new Semaphore(numberOfWorkers);
+        Semaphore semaphore = new Semaphore(numberOfWorkers-1);
+        Semaphore secondSemaphore = new Semaphore(numberOfWorkers*2);
         for(int i=1; i<=numberOfWorkers;i++){
             if (i!=numberOfWorkers){
                 semaphore.acquire();
@@ -158,41 +155,42 @@ public class MultithreadingGuiExercise extends JFrame
                 new Thread(worker).start();
             }
             if(i==numberOfWorkers){
-//                semaphore.acquire();
-//                long bottom = interval * (i-1);
-//                long newInterval = (originalNumber-bottom) % 5;
-                semaphore.acquire();
-                long newBottom = interval * (i-1);
-                long newTop = originalNumber;
-                Worker worker = new Worker(newBottom, newTop, semaphore);
-                new Thread(worker).start();
-//                for (int m=1; m<=5; m++){
-//                    if(m!=5){
-//                        .acquire();
-//                        long newBottom = bottom + newInterval * (m-1);
-//                        long newTop = bottom + newInterval * m;
-//                        Worker worker = new Worsemaphoreker(newBottom, newTop, semaphore);
-//                        new Thread(worker).start();
-//                    }
-//                    if(m==5){
-//                        semaphore.acquire();
-//                        long newBottom = bottom + newInterval * (m-1);
-//                        long newTop = originalNumber;
-//                        Worker worker = new Worker(newBottom, newTop, semaphore);
-//                        new Thread(worker).start();
-//                    }
-//                }
+                long bottom = interval * (i-1);
+                long newInterval = (originalNumber-bottom) % (numberOfWorkers);
+
+                for (int m=1; m<=numberOfWorkers; m++){
+                    if(m!=numberOfWorkers){
+                        secondSemaphore.acquire();
+                        long newBottom = bottom + newInterval * (m-1);
+                        long newTop = bottom + newInterval * m;
+                        Worker newWorker = new Worker(newBottom, newTop, secondSemaphore);
+                        new Thread(newWorker).start();
+                    }
+                    if(m==numberOfWorkers){
+                        semaphore.acquire();
+                        long newBottom = bottom + newInterval * (m-1);
+                        long newTop = originalNumber;
+                        Worker worker = new Worker(newBottom, newTop, semaphore);
+                        new Thread(worker).start();
+                    }
+                }
             }
         }
 
         int numAcquire = 0;
-        while(numAcquire < numberOfWorkers){
+        while(numAcquire < (numberOfWorkers-1)){
             semaphore.acquire();
             numAcquire++;
         }
 
-        for(int n=0; n< resultList.size(); n++ ){
-            output.append(resultList.get(n) + "\n");
+        int numAcquire2 = 0;
+        while(numAcquire2 < numberOfWorkers){
+            secondSemaphore.acquire();
+            numAcquire2++;
+        }
+
+        for (Long aLong : resultList) {
+            output.append(aLong + "\n");
         }
         output.append("total number of prime is " + resultList.size());
     }
