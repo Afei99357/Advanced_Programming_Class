@@ -149,7 +149,7 @@ public class MultithreadingGuiExercise extends JFrame
     {
         long interval = originalNumber % numberOfWorkers;
         Semaphore semaphore = new Semaphore(numberOfWorkers);
-        for(int i=0; i<numberOfWorkers;i++){
+        for(int i=1; i<=numberOfWorkers;i++){
             if (i!=numberOfWorkers){
                 semaphore.acquire();
                 long bottom = interval * (i-1);
