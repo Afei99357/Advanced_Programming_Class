@@ -4,15 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
 
 public class MultithreadingGuiExercise extends JFrame
 {
     private static final JTextArea output = new JTextArea(10,25);
-    public static final List<Long> resultList = new CopyOnWriteArrayList<>();
-    private static final int numberOfWorkers = 4;
+    public static final List<Long> resultList = Collections.synchronizedList(new ArrayList<>());
+    private static final int numberOfWorkers = 3;
+    private static long beginTime;
+    private static boolean doneFlag = false;
 
 
     public MultithreadingGuiExercise(){
@@ -26,58 +29,6 @@ public class MultithreadingGuiExercise extends JFrame
         output.setWrapStyleWord(true);
 
         setVisible(true);
-    }
-
-    private class Worker implements Runnable{
-
-        private final long bottomNumber;
-        private final long topNumber;
-        private final Semaphore semaphore;
-
-        public Worker(long bottomNumber, long topNumber, Semaphore semaphore)
-        {
-            this.bottomNumber = bottomNumber;
-            this.topNumber = topNumber;
-            this.semaphore = semaphore;
-        }
-
-        @Override
-        public void run()
-        {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            long threadBeginTime = System.currentTimeMillis();
-            long m = bottomNumber + 1;
-            while(m<=topNumber){
-                if(m==2 || m==3){
-                    resultList.add(m);
-                    m++;
-                    continue;
-                }
-
-                for(int i =2; i<=(int) Math.sqrt(m);i++){
-                    if(m%i==0){
-                        break;
-                    }
-                    if(i==(int) Math.sqrt(m)){
-                        resultList.add(m);
-                    }
-                }
-                m++;
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("release "+System.currentTimeMillis());
-            semaphore.release();
-            long threadEndTime = System.currentTimeMillis();
-            System.out.println("Thread time cost is: " + (threadEndTime - threadBeginTime)/1000f);
-        }
     }
 
     private JPanel getUpperPanel(){
@@ -124,6 +75,10 @@ public class MultithreadingGuiExercise extends JFrame
                             i=1;
                             output.setText("");
                             resultList.clear();
+                            beginTime = System.currentTimeMillis();
+//                            Semaphore managerThreadSemaphore = new Semaphore(1);
+//                            ManagerWorker managerWorker = new ManagerWorker(managerThreadSemaphore);
+//                            new Thread(managerWorker).start();
                             getPrimeNumber(originalNumber);
                         } catch (NumberFormatException numberFormatException) {
                             JOptionPane.showMessageDialog(frame, "Only number is allowed");
@@ -143,56 +98,91 @@ public class MultithreadingGuiExercise extends JFrame
 
     private void getPrimeNumber(Long originalNumber) throws InterruptedException
     {
-        long interval = originalNumber % numberOfWorkers;
-        Semaphore semaphore = new Semaphore(numberOfWorkers-1);
-        Semaphore secondSemaphore = new Semaphore(numberOfWorkers*2);
-        for(int i=1; i<=numberOfWorkers;i++){
-            if (i!=numberOfWorkers){
+        Semaphore semaphore = new Semaphore(numberOfWorkers);
+
+        for (long i=1; i<originalNumber; i++){
+            if(i == 2 || i == 3){
+                resultList.add(i);
+                output.append(i + "\n");
+                continue;
+            }
+            if (i%numberOfWorkers==0){
                 semaphore.acquire();
-                long bottom = interval * (i-1);
-                long top = interval * i;
-                Worker worker = new Worker(bottom, top, semaphore);
+                Worker worker = new Worker(i, semaphore);
                 new Thread(worker).start();
             }
-            if(i==numberOfWorkers){
-                long bottom = interval * (i-1);
-                long newInterval = (originalNumber-bottom) % (numberOfWorkers);
-
-                for (int m=1; m<=numberOfWorkers; m++){
-                    if(m!=numberOfWorkers){
-                        secondSemaphore.acquire();
-                        long newBottom = bottom + newInterval * (m-1);
-                        long newTop = bottom + newInterval * m;
-                        Worker newWorker = new Worker(newBottom, newTop, secondSemaphore);
-                        new Thread(newWorker).start();
-                    }
-                    if(m==numberOfWorkers){
-                        semaphore.acquire();
-                        long newBottom = bottom + newInterval * (m-1);
-                        long newTop = originalNumber;
-                        Worker worker = new Worker(newBottom, newTop, semaphore);
-                        new Thread(worker).start();
-                    }
-                }
+            if (i%numberOfWorkers==1){
+                semaphore.acquire();
+                Worker worker = new Worker(i, semaphore);
+                new Thread(worker).start();
             }
         }
 
-        int numAcquire = 0;
-        while(numAcquire < (numberOfWorkers-1)){
-            semaphore.acquire();
-            numAcquire++;
-        }
+        ManagerWorker managerWorker = new ManagerWorker(semaphore);
+        new Thread(managerWorker).start();
 
-        int numAcquire2 = 0;
-        while(numAcquire2 < numberOfWorkers){
-            secondSemaphore.acquire();
-            numAcquire2++;
-        }
-
-        for (Long aLong : resultList) {
-            output.append(aLong + "\n");
-        }
+        long endingTime = System.currentTimeMillis();
+        System.out.println("total time cost is: " + (endingTime-beginTime) / 1000f);
         output.append("total number of prime is " + resultList.size());
+    }
+
+    private class Worker implements Runnable{
+
+        private final long number;
+        private final Semaphore semaphore;
+
+        public Worker(long number, Semaphore semaphore)
+        {
+            this.number = number;
+            this.semaphore = semaphore;
+        }
+
+        @Override
+        public void run()
+        {
+            for(int i =2; i<=(int) Math.sqrt(number);i++){
+                if(number%i==0){
+                    break;
+                }
+
+                if(i==(int) Math.sqrt(number)){
+                    resultList.add(number);
+                    output.append(number + "\n");
+                }
+                Thread.yield();
+            }
+
+            System.out.println("release "+System.currentTimeMillis());
+            semaphore.release();
+        }
+    }
+
+    private class ManagerWorker implements Runnable{
+
+
+        private final Semaphore managerSemaphore;
+
+        public ManagerWorker(Semaphore managerSemaphore)
+        {
+            this.managerSemaphore = managerSemaphore;
+        }
+
+        @Override
+        public void run()
+        {
+            int numAcquire = 0;
+            while(numAcquire < (numberOfWorkers-1)){
+                Thread.yield();
+                try {
+                    managerSemaphore.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                numAcquire++;
+            }
+            System.out.println("release "+System.currentTimeMillis());
+            managerSemaphore.release();
+        }
     }
 
     public static void main(String[] args)
