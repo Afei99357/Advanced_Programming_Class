@@ -13,9 +13,8 @@ public class MultithreadingGuiExercise extends JFrame
 {
     private static final JTextArea output = new JTextArea(10,25);
     public static final List<Long> resultList = Collections.synchronizedList(new ArrayList<>());
-    private static final int numberOfWorkers = 3;
+    private static final int numberOfWorkers = 2;
     private static long beginTime;
-    private static boolean doneFlag = false;
 
 
     public MultithreadingGuiExercise(){
@@ -99,6 +98,8 @@ public class MultithreadingGuiExercise extends JFrame
     private void getPrimeNumber(Long originalNumber) throws InterruptedException
     {
         Semaphore semaphore = new Semaphore(numberOfWorkers);
+//        ManagerWorker managerWorker = new ManagerWorker(semaphore);
+//        new Thread(managerWorker).start();
 
         for (long i=1; i<originalNumber; i++){
             if(i == 2 || i == 3){
@@ -118,8 +119,6 @@ public class MultithreadingGuiExercise extends JFrame
             }
         }
 
-        ManagerWorker managerWorker = new ManagerWorker(semaphore);
-        new Thread(managerWorker).start();
 
         long endingTime = System.currentTimeMillis();
         System.out.println("total time cost is: " + (endingTime-beginTime) / 1000f);
@@ -140,6 +139,7 @@ public class MultithreadingGuiExercise extends JFrame
         @Override
         public void run()
         {
+            Thread.yield();
             for(int i =2; i<=(int) Math.sqrt(number);i++){
                 if(number%i==0){
                     break;
@@ -171,8 +171,7 @@ public class MultithreadingGuiExercise extends JFrame
         public void run()
         {
             int numAcquire = 0;
-            while(numAcquire < (numberOfWorkers-1)){
-                Thread.yield();
+            while(numAcquire < (numberOfWorkers)){
                 try {
                     managerSemaphore.acquire();
                 } catch (InterruptedException e) {
