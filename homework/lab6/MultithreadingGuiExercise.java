@@ -98,8 +98,6 @@ public class MultithreadingGuiExercise extends JFrame
     private void getPrimeNumber(Long originalNumber) throws InterruptedException
     {
         Semaphore semaphore = new Semaphore(numberOfWorkers);
-//        ManagerWorker managerWorker = new ManagerWorker(semaphore);
-//        new Thread(managerWorker).start();
 
         for (long i=1; i<originalNumber; i++){
             if(i == 2 || i == 3){
@@ -119,10 +117,11 @@ public class MultithreadingGuiExercise extends JFrame
             }
         }
 
+        semaphore.acquire();
+        ManagerWorker managerWorker = new ManagerWorker(semaphore);
+        new Thread(managerWorker).start();
 
-        long endingTime = System.currentTimeMillis();
-        System.out.println("total time cost is: " + (endingTime-beginTime) / 1000f);
-        output.append("total number of prime is " + resultList.size());
+
     }
 
     private class Worker implements Runnable{
@@ -139,7 +138,7 @@ public class MultithreadingGuiExercise extends JFrame
         @Override
         public void run()
         {
-            Thread.yield();
+//            Thread.yield();
             for(int i =2; i<=(int) Math.sqrt(number);i++){
                 if(number%i==0){
                     break;
@@ -149,7 +148,7 @@ public class MultithreadingGuiExercise extends JFrame
                     resultList.add(number);
                     output.append(number + "\n");
                 }
-                Thread.yield();
+//                Thread.yield();
             }
 
             System.out.println("release "+System.currentTimeMillis());
@@ -171,7 +170,7 @@ public class MultithreadingGuiExercise extends JFrame
         public void run()
         {
             int numAcquire = 0;
-            while(numAcquire < (numberOfWorkers)){
+            while(numAcquire < (numberOfWorkers-1)){
                 try {
                     managerSemaphore.acquire();
                 } catch (InterruptedException e) {
@@ -181,6 +180,9 @@ public class MultithreadingGuiExercise extends JFrame
             }
             System.out.println("release "+System.currentTimeMillis());
             managerSemaphore.release();
+            long endingTime = System.currentTimeMillis();
+            System.out.println("total time cost is: " + (endingTime-beginTime) / 1000f);
+            output.append("total number of prime is " + resultList.size());
         }
     }
 

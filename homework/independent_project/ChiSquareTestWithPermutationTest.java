@@ -1,4 +1,4 @@
-package homework.indepent_project;
+package homework.independent_project;
 
 import java.util.*;
 
