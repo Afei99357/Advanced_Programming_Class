@@ -13,7 +13,7 @@ public class MultithreadingGuiExercise extends JFrame
 {
     private static final JTextArea output = new JTextArea(10,25);
     public static final List<Long> resultList = Collections.synchronizedList(new ArrayList<>());
-    private static final int numberOfWorkers = 2;
+    private static final int numberOfWorkers = 1;
     private static long beginTime;
 
 
@@ -75,14 +75,11 @@ public class MultithreadingGuiExercise extends JFrame
                             output.setText("");
                             resultList.clear();
                             beginTime = System.currentTimeMillis();
-//                            Semaphore managerThreadSemaphore = new Semaphore(1);
-//                            ManagerWorker managerWorker = new ManagerWorker(managerThreadSemaphore);
-//                            new Thread(managerWorker).start();
                             getPrimeNumber(originalNumber);
                         } catch (NumberFormatException numberFormatException) {
                             JOptionPane.showMessageDialog(frame, "Only number is allowed");
                             i++;
-                        } catch (HeadlessException | InterruptedException headlessException) {
+                        } catch (HeadlessException headlessException) {
                             headlessException.printStackTrace();
                         }
                     }
@@ -95,7 +92,7 @@ public class MultithreadingGuiExercise extends JFrame
         return panel;
     }
 
-    private void getPrimeNumber(Long originalNumber) throws InterruptedException
+    private void getPrimeNumber(Long originalNumber)
     {
         Semaphore semaphore = new Semaphore(numberOfWorkers);
 
@@ -106,18 +103,18 @@ public class MultithreadingGuiExercise extends JFrame
                 continue;
             }
             if (i%numberOfWorkers==0){
-                semaphore.acquire();
+//                semaphore.acquire();
                 Worker worker = new Worker(i, semaphore);
                 new Thread(worker).start();
             }
             if (i%numberOfWorkers==1){
-                semaphore.acquire();
+//                semaphore.acquire();
                 Worker worker = new Worker(i, semaphore);
                 new Thread(worker).start();
             }
         }
 
-        semaphore.acquire();
+//        semaphore.acquire();
         ManagerWorker managerWorker = new ManagerWorker(semaphore);
         new Thread(managerWorker).start();
 
@@ -148,7 +145,6 @@ public class MultithreadingGuiExercise extends JFrame
                     resultList.add(number);
                     output.append(number + "\n");
                 }
-//                Thread.yield();
             }
 
             System.out.println("release "+System.currentTimeMillis());
@@ -170,7 +166,7 @@ public class MultithreadingGuiExercise extends JFrame
         public void run()
         {
             int numAcquire = 0;
-            while(numAcquire < (numberOfWorkers-1)){
+            while(numAcquire < (numberOfWorkers)){
                 try {
                     managerSemaphore.acquire();
                 } catch (InterruptedException e) {
