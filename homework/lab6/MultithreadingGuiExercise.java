@@ -13,8 +13,9 @@ public class MultithreadingGuiExercise extends JFrame
 {
     private static final JTextArea output = new JTextArea(10,25);
     public static final List<Long> resultList = Collections.synchronizedList(new ArrayList<>());
-    private static final int numberOfWorkers = 1;
+    private static final int numberOfWorkers = 2;
     private static long beginTime;
+    private static int cancelFlag = 0;
 
 
     public MultithreadingGuiExercise(){
@@ -40,6 +41,7 @@ public class MultithreadingGuiExercise extends JFrame
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                cancelFlag=1;
                 validate();
             }
         });
@@ -65,23 +67,20 @@ public class MultithreadingGuiExercise extends JFrame
                 for(int i=1; i!=0; i--){
                     String input = JOptionPane.showInputDialog(frame,
                             "Enter your number: ");
-                    if (input == null || input.length()==0){
-                        break;
-                    }
-                    else{
-                        try{
-                            Long originalNumber = Long.parseLong(input);
-                            i=1;
-                            output.setText("");
-                            resultList.clear();
-                            beginTime = System.currentTimeMillis();
-                            getPrimeNumber(originalNumber);
-                        } catch (NumberFormatException numberFormatException) {
-                            JOptionPane.showMessageDialog(frame, "Only number is allowed");
-                            i++;
-                        } catch (HeadlessException headlessException) {
-                            headlessException.printStackTrace();
-                        }
+                    if (input != null && input.length()>0)
+                    try{
+                        Long originalNumber = Long.parseLong(input);
+                        i=1;
+                        output.setText("");
+                        resultList.clear();
+                        cancelFlag=0;
+                        beginTime = System.currentTimeMillis();
+                        calculatePrimeNumber(originalNumber);
+                    } catch (NumberFormatException numberFormatException) {
+                        JOptionPane.showMessageDialog(frame, "Only number is allowed");
+                        i++;
+                    } catch (HeadlessException | InterruptedException headlessException) {
+                        headlessException.printStackTrace();
                     }
                 }
                 validate();
@@ -92,68 +91,67 @@ public class MultithreadingGuiExercise extends JFrame
         return panel;
     }
 
-    private void getPrimeNumber(Long originalNumber)
+    private void calculatePrimeNumber(Long originalNumber) throws InterruptedException
     {
         Semaphore semaphore = new Semaphore(numberOfWorkers);
 
-        for (long i=1; i<originalNumber; i++){
-            if(i == 2 || i == 3){
-                resultList.add(i);
-                output.append(i + "\n");
-                continue;
-            }
-            if (i%numberOfWorkers==0){
-//                semaphore.acquire();
-                Worker worker = new Worker(i, semaphore);
-                new Thread(worker).start();
-            }
-            if (i%numberOfWorkers==1){
-//                semaphore.acquire();
-                Worker worker = new Worker(i, semaphore);
-                new Thread(worker).start();
-            }
+        for (int i = 0; i < numberOfWorkers; i++) {
+            semaphore.acquire();
+            Worker worker = new Worker(originalNumber,i, semaphore);
+//            System.out.println("thread " + i + " started!");
+            new Thread(worker).start();
         }
 
-//        semaphore.acquire();
         ManagerWorker managerWorker = new ManagerWorker(semaphore);
         new Thread(managerWorker).start();
-
-
     }
 
     private class Worker implements Runnable{
 
         private final long number;
+        private int reminder;
         private final Semaphore semaphore;
 
-        public Worker(long number, Semaphore semaphore)
+        public Worker(long number,int reminder, Semaphore semaphore)
         {
             this.number = number;
+            this.reminder = reminder;
             this.semaphore = semaphore;
         }
 
         @Override
         public void run()
         {
-//            Thread.yield();
-            for(int i =2; i<=(int) Math.sqrt(number);i++){
-                if(number%i==0){
+            for(long i=0; i<number; i++){
+                if(cancelFlag==1){
+                    output.append("Worker " + i +" stopped!"+ "\n");
+                    semaphore.release();
                     break;
                 }
+                if(number%2==reminder){
+                    if (i == 2 || i == 3) {
+                        resultList.add(i);
+                        output.append(i + "\n");
+                        continue;
+                    }
 
-                if(i==(int) Math.sqrt(number)){
-                    resultList.add(number);
-                    output.append(number + "\n");
+                    for(int m =2; m<=(int) Math.sqrt(i);m++){
+                        if(i%m==0){
+                            break;
+                        }
+                        if(m==(int) Math.sqrt(i)){
+                            resultList.add(i);
+                            output.append(i + "\n");
+                        }
+                    }
                 }
             }
-
-            System.out.println("release "+System.currentTimeMillis());
+//            System.out.println("release "+System.currentTimeMillis());
             semaphore.release();
         }
     }
 
     private class ManagerWorker implements Runnable{
-
 
         private final Semaphore managerSemaphore;
 
@@ -169,16 +167,18 @@ public class MultithreadingGuiExercise extends JFrame
             while(numAcquire < (numberOfWorkers)){
                 try {
                     managerSemaphore.acquire();
+                    numAcquire++;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                numAcquire++;
             }
+
             System.out.println("release "+System.currentTimeMillis());
-            managerSemaphore.release();
             long endingTime = System.currentTimeMillis();
             System.out.println("total time cost is: " + (endingTime-beginTime) / 1000f);
-            output.append("total number of prime is " + resultList.size());
+            managerSemaphore.release();
+//            output.append("total number of prime is " + resultList.size());
+
         }
     }
 
