@@ -175,9 +175,9 @@ public class MultithreadingGuiExercise extends JFrame
 
             System.out.println("release "+System.currentTimeMillis());
             long endingTime = System.currentTimeMillis();
-            System.out.println("total time cost is: " + (endingTime-beginTime) / 1000f);
+            output.append("total time cost is: " + (endingTime-beginTime) / 1000f + "s\n");
             managerSemaphore.release();
-//            output.append("total number of prime is " + resultList.size());
+            output.append("total number of prime is " + resultList.size());
 
         }
     }
