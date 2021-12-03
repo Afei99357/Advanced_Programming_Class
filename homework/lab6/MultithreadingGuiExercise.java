@@ -124,7 +124,7 @@ public class MultithreadingGuiExercise extends JFrame
         {
             for(long i=0; i<number; i++){
                 if(cancelFlag==1){
-                    output.append("Worker " + i +" stopped!"+ "\n");
+                    output.append("Process is stopped!"+ "\n");
                     semaphore.release();
                     break;
                 }
@@ -146,7 +146,6 @@ public class MultithreadingGuiExercise extends JFrame
                     }
                 }
             }
-//            System.out.println("release "+System.currentTimeMillis());
             semaphore.release();
         }
     }
