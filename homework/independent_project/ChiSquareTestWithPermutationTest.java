@@ -4,26 +4,43 @@ import java.util.*;
 
 public class ChiSquareTestWithPermutationTest
 {
+    private static class DbAndClusterValuePair
+    {
+        private int dbValue;
+        private int clusterValue;
+
+        public DbAndClusterValuePair() {
+            dbValue = 0;
+            clusterValue = 0;
+        }
+
+        public DbAndClusterValuePair(int dbValue, int clusterValue) {
+            this.dbValue = dbValue;
+            this.clusterValue = clusterValue;
+        }
+
+        public int getDbValue() {
+            return dbValue;
+        }
+
+        public int getClusterValue() {
+            return clusterValue;
+        }
+
+        public void setDbValue(int dbValue) {
+            this.dbValue = dbValue;
+        }
+
+        public void setClusterValue(int clusterValue) {
+            this.clusterValue = clusterValue;
+        }
+    }
+
     private static final double EPS = 0.01;
 
     public static void main(String[] args)
     {
-
         List<DbAndClusterValuePair> pairsList = new ArrayList<>();
-        List<DbAndClusterValuePair> pairsList2 = new ArrayList<>();
-
-        // Test input from real data
-        DbAndClusterValuePair single_quadrupole = new DbAndClusterValuePair(13, 12);
-        DbAndClusterValuePair gc_tof = new DbAndClusterValuePair(29, 0);
-        DbAndClusterValuePair single_quadruple = new DbAndClusterValuePair(13, 2);
-        DbAndClusterValuePair gc_ion_trap = new DbAndClusterValuePair(6, 0);
-        DbAndClusterValuePair gc_x_gc_tof = new DbAndClusterValuePair(7, 1);
-        pairsList.add(single_quadrupole);
-        pairsList.add(gc_tof);
-        pairsList.add(single_quadruple);
-        pairsList.add(gc_ion_trap);
-        pairsList.add(gc_x_gc_tof);
-        double actualPvalue = 0.0002;
 
         // Test data 2
         DbAndClusterValuePair a3 = new DbAndClusterValuePair(38, 12);
@@ -37,18 +54,18 @@ public class ChiSquareTestWithPermutationTest
         DbAndClusterValuePair i3 = new DbAndClusterValuePair(1, 0);
         DbAndClusterValuePair j3 = new DbAndClusterValuePair(1, 0);
         DbAndClusterValuePair k3 = new DbAndClusterValuePair(11, 0);
-        pairsList2.add(a3);
-        pairsList2.add(b3);
-        pairsList2.add(c3);
-        pairsList2.add(d3);
-        pairsList2.add(e3);
-        pairsList2.add(f3);
-        pairsList2.add(g3);
-        pairsList2.add(h3);
-        pairsList2.add(i3);
-        pairsList2.add(j3);
-        pairsList2.add(k3);
-        double actualPvalue2 = 0.3086;
+        pairsList.add(a3);
+        pairsList.add(b3);
+        pairsList.add(c3);
+        pairsList.add(d3);
+        pairsList.add(e3);
+        pairsList.add(f3);
+        pairsList.add(g3);
+        pairsList.add(h3);
+        pairsList.add(i3);
+        pairsList.add(j3);
+        pairsList.add(k3);
+        double actualPvalue = 0.3804863995313644;
 
         // testing the result. In ADAP-KDB, we use junit to test result
         int n =0;
@@ -56,12 +73,12 @@ public class ChiSquareTestWithPermutationTest
         int testTime = 1;
         List<Double> pvalueList = new ArrayList<>();
         for (int i=0; i<testTime; i++){
-            double pValue = calculateChiSquaredPermutationStatistics(pairsList2);
+            double pValue = calculateChiSquaredPermutationStatistics(pairsList);
             sum += pValue;
             pvalueList.add(pValue);
 
-            System.out.println(Math.abs(pValue - actualPvalue2) < EPS);
-            if (!(Math.abs(pValue - actualPvalue2) < EPS)){
+            System.out.println(Math.abs(pValue - actualPvalue) < EPS);
+            if (!(Math.abs(pValue - actualPvalue) < EPS)){
                 n++;
             }
         }
@@ -78,7 +95,7 @@ public class ChiSquareTestWithPermutationTest
 
         System.out.println("total fail times are " + n);
         System.out.println("The average p-Value is " + mean);
-        System.out.println("Actually p-value is " + actualPvalue2);
+        System.out.println("Actually p-value is " + actualPvalue);
         System.out.println("Standard deviatoin is " + sd);
 
     }
@@ -92,13 +109,13 @@ public class ChiSquareTestWithPermutationTest
             int clusterNum = dbAndClusterValuePair.getClusterValue();
             int dbNum = dbAndClusterValuePair.getDbValue();
 
-            if(clusterNum>0){
-                for(int i=0; i<clusterNum; i++){
+            if (clusterNum > 0) {
+                for (int i = 0; i < clusterNum; i++) {
                     clusterList.add(n);
                 }
             }
-            if(dbNum>0){
-                for(int i=0; i<dbNum; i++){
+            if (dbNum > 0) {
+                for (int i = 0; i < dbNum; i++) {
                     dbList.add(n);
                 }
             }
@@ -106,43 +123,39 @@ public class ChiSquareTestWithPermutationTest
         }
 
         double statObs = chi_square_test(clusterList, dbList);
-        List<Double> chiSquareStatDistr = new ArrayList<>();
 
         int iterationNumber = 50000;
 
-        for (int i=0; i <iterationNumber; i++){
-            List[] shuffledResults = random_shuffle(clusterList, dbList);
-            List<Integer> newCluster = new ArrayList<>(shuffledResults[0]);
-            List<Integer> newDb = new ArrayList<>(shuffledResults[1]);
+        List<Double> chiSquareStatDistr = new ArrayList<>(iterationNumber);
+
+        for (int i = 0; i < iterationNumber; i++) {
+            List<Integer> shuffledResults = random_shuffle(clusterList, dbList);
+            List<Integer> newCluster = shuffledResults.subList(0, clusterList.size());
+            List<Integer> newDb = shuffledResults.subList(clusterList.size(), clusterList.size() + dbList.size());
             chiSquareStatDistr.add(chi_square_test(newCluster, newDb));
         }
 
-        float pvalue = (chiSquareStatDistr.stream().filter(i -> i>=statObs).count()) / (float) iterationNumber;
+        float pvalue = (chiSquareStatDistr.stream().filter(i -> i >= statObs).count()) / (float) iterationNumber;
 
         return pvalue;
     }
 
-    public static List[] random_shuffle(List<Integer> clusterList, List<Integer> dbList){
-        List<Integer> newCluster = new ArrayList<>();
-        List<Integer> newDb = new ArrayList<>();
+    private static List<Integer> random_shuffle(List<Integer> clusterList, List<Integer> dbList) {
+        List<Integer> newClusterList;
+        List<Integer> newDbList;
 
         List<Integer> mergedList = new ArrayList<>(clusterList);
         mergedList.addAll(dbList);
 
-        Random rand = new Random();
+        Collections.shuffle(mergedList);
 
-        for (int i=0; i<clusterList.size(); i++){
-            int newElement = mergedList.get(rand.nextInt(mergedList.size()));
-            newCluster.add(newElement);
-            mergedList.remove(newElement);
-        }
+        newClusterList = mergedList.subList(0,clusterList.size());
+        newDbList = mergedList.subList(clusterList.size(), clusterList.size()+dbList.size());
 
-        for(int i=0; i<dbList.size();i++){
-            Integer newElement = mergedList.get(rand.nextInt(mergedList.size()));
-            newDb.add(newElement);
-            mergedList.remove(newElement);
-        }
-        return new List[]{newCluster, newDb};
+        List<Integer> newMergedList = new ArrayList<>(newClusterList);
+        newMergedList.addAll(newDbList);
+
+        return newMergedList;
     }
 
     public static double chi_square_test(List<Integer> clusterList, List<Integer> dbList){
@@ -155,13 +168,12 @@ public class ChiSquareTestWithPermutationTest
         for(Integer s: uniqueElementList){
 
             double observation = Collections.frequency(clusterList, s) + 0.5;
-            double expectation = Collections.frequency(dbList, s) + 0.5;
+            double expectation = Collections.frequency(dbList, s) * (clusterList.size()/(float) dbList.size()) + 0.5;
 
             S = S + (Math.pow(observation-expectation, 2))/expectation;
 
         }
         return S;
     }
-
 
 }
