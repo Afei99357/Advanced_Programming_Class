@@ -15,7 +15,7 @@ public class MultithreadingGuiExercise extends JFrame
     public static final List<Long> resultList = Collections.synchronizedList(new ArrayList<>());
     private static final int numberOfWorkers = 2;
     private static long beginTime;
-    private static int cancelFlag = 0;
+    private volatile static int cancelFlag = 0;
 
 
     public MultithreadingGuiExercise(){
