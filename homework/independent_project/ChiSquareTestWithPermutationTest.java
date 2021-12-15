@@ -70,7 +70,7 @@ public class ChiSquareTestWithPermutationTest
         // testing the result. In ADAP-KDB, we use junit to test result
         int n =0;
         double sum = 0.0;
-        int testTime = 1;
+        int testTime = 50;
         List<Double> pvalueList = new ArrayList<>();
         for (int i=0; i<testTime; i++){
             double pValue = calculateChiSquaredPermutationStatistics(pairsList);
